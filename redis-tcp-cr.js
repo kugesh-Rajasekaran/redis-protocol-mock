@@ -15,7 +15,7 @@ const server = net
 				.toString("utf-8")
 				.replace(/[\r\n]/gm, "");
 			console.log(parsed);
-			requestFramer(parsed, socket);
+			commandFramer(parsed, socket);
 			responseProvider(socket);
 		});
 	})
@@ -25,12 +25,36 @@ const server = net
 
 // *2 $5 lpush *3 *1 :1
 
+newData.split('*') // ['*', '2', '2']
 
 
-*3
+command parsing
+1. Getting the command store it in an order
+command execution
+2. Execute the whole array
+
+
+result = [PING]
+
+lenthToParse = 1
+currentLength = 4
+
 *2
+$4
+PING
+$
+JASWANTH
 
-function requestFramer(parsed, socket) {
+
+
+parsed = [ PING, JASWANTH ]
+result = 
+
+
+PONG JASWANTH
+
+
+function commandFramer(parsed, socket) {
 	const typeIdentifier = parsed[0];
 	const parsedInt = parseInt(parsed.slice(1)); // *2
 	switch (typeIdentifier) {
