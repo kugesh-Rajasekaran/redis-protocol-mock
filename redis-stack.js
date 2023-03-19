@@ -1,7 +1,9 @@
 const net = require("node:net");
+const fs = require("fs");
 
 let stack = {};
 let framedCommand = {};
+const storage = {};
 const history = {};
 
 const server = net
@@ -124,6 +126,14 @@ function resultFramer(socket, id) {
 		case "HSET":
 			result = framedCommand[id].filter((v, i) => i != 0).flat().length;
 			break;
+		case "SET":
+			const content = framedCommand[id].filter((v, i) => i != 0);
+			storage[id] || (storage[id] = {});
+			storage[id][content[0]] = content[1];
+			break;
+		case "GET":
+			result = storage[id][framedCommand[id][1]];
+			break;
 		case "HISTORY":
 			result = history[id];
 			break;
@@ -147,7 +157,7 @@ function quitState(result, id) {
 // 2. The command ends - *2 ,
 
 // meta command
-// exectable command
+// executable command
 
 function doPop(id) {
 	let commandInfo = stack[id][stack[id].length - 1];
